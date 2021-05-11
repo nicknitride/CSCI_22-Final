@@ -25,7 +25,7 @@ public class Player extends JFrame{
 
     public void setUpGUI(){
         this.setSize(width,height);
-        this.setTitle("Turn-based Game");
+        this.setTitle("Player #:"+playerID);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         container.setLayout(new GridLayout(1,5));
         container.add(message);
@@ -37,6 +37,14 @@ public class Player extends JFrame{
         container.add(b2);
         container.add(b3);
         container.add(b4);
+
+        if (playerID == 1){
+            message.setText("You are player #1. You go first.");
+            otherPlayer = 2;
+        } else {
+            message.setText("You are player #2. Wait for player #1's move.");
+        }
+
         this.setVisible(true);
     }
 
@@ -56,6 +64,8 @@ public class Player extends JFrame{
                 socket = new Socket("localhost", 51734);//initiates connection to server
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
+                playerID = dataIn.readInt();
+                System.out.println("Connected to server as Player #"+playerID+".");
             } catch (Exception e) {
                 System.out.println("IO exception from client connection constructor");
                 e.printStackTrace();
