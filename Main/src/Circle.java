@@ -39,7 +39,7 @@ public class Circle{
     }
 
 
-    public void move(int x) {
-        xPosition-=10;
-    }//every time the move method is called the circle shifts by -10
+    public void move() {
+        yPosition-=10;
+    }
 }
