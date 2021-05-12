@@ -22,10 +22,10 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 public class Circle{
-    private double xPosition, yPosition, size;
+    private int xPosition, yPosition, size;
     private Color color;
 
-    public Circle(double xPosition, double yPosition, double size, Color color){
+    public Circle(int xPosition, int yPosition, int size, Color color){
         this.xPosition = xPosition;
         this.yPosition = yPosition;
         this.size = size;
@@ -38,8 +38,20 @@ public class Circle{
             g2d.fill(circle1);
     }
 
+    public int getY(){
+        return yPosition;
+    }
 
-    public void move() {
-        yPosition-=10;
+    public int getX(){
+        return xPosition;
+    }
+
+    public int getRadius(){
+        int radius = size/2;
+        return radius;
+    }
+
+    public void move(int moveY) {
+        yPosition+=moveY;
     }
 }

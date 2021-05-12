@@ -1,3 +1,7 @@
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+
 /**
  @author Nicholo Patrick C. Pardines (193821)
  @version May 3, 2021
@@ -20,16 +24,20 @@
 	of my program.
 */
 public class MyRectangle {
-    int x,y,width,height,xSpeed, ySpeed;
-    MyRectangle(int x, int y, int width, int height, int speed){
+    int x,y,width,height,xSpeed, ySpeed, rightBorder, bottomBorder;
+    MyRectangle(int x, int y, int width, int height, int rightBorder, int bottomBorder){
         this.x=x;
         this.y=y;
         this.width=width;
         this.height=height;
-        xSpeed=speed;
-        ySpeed=speed*-1;
+        this.rightBorder = rightBorder;
+        this.bottomBorder = bottomBorder;
     }
-
+    public void draw(Graphics2D g2d){
+        Rectangle2D.Double rectangle2D = new Rectangle2D.Double(x,y,width,height);
+        g2d.setColor(Color.BLACK);
+        g2d.fill(rectangle2D);
+    }
     public int getX() {
         return x;
     }
@@ -46,59 +54,24 @@ public class MyRectangle {
         return height;
     }
 
-    public int getxSpeed() {
-        return xSpeed;
-    }
-    public int getySpeed() {
-        return ySpeed;
-    }
 
-    public void xReverse(){xSpeed=xSpeed*-1;}
+    public int hitCounter(Circle circleInstance){
+        int circleX, circleY, rectangleX, rectangleY;
+        circleX = circleInstance.getX();
+        circleY = circleInstance.getY();
 
-    public void yReverse(){ySpeed=ySpeed*-1;}
-
-
-    public void totalReverse(){
-        xSpeed=xSpeed*-1;
-        ySpeed=ySpeed*-1;
-        move();
-    }
+        rectangleX = x+(x/2);
+        rectangleY = y;
+        double distance = Math.sqrt((circleX-rectangleX)*(circleX-rectangleX)
+                + (circleY-rectangleY)*(circleY-rectangleY));
 
 
-    public void borderCollision(){
-        int rightBorder=800, bottomBorder=600;
-        if(this.x+this.width>rightBorder){
-            xReverse();
-            move();
+        if (circleInstance.getRadius()<distance ){
+            return 1;
         }
-        else if(this.y<0){
-            yReverse();
-            move();
-        }
-        else if(this.x<0){
-            xReverse();
-            move();
-        }
-        else if(this.y+this.height>bottomBorder){
-            yReverse();
-            move();
-        }
-        else
-            move();
+        return 0;
     }
 
-    public void move(){
-        x+=xSpeed;
-        y+=ySpeed;
-    }
-
-
-    public Boolean isColliding(MyRectangle instance){
-        boolean objectCollision = !(this.y>= instance.getY()+ instance.getHeight()
-                || this.y+this.height<= instance.getY()
-                || instance.getX()+ instance.getWidth()<=this.x
-                || this.x+this.width<= instance.getX());
-        return (objectCollision);//Made the boolean easier to read for maintainability
-    }
+    //public displayEnemy() - implement later using DataOutputStream in Java Socket
 
 }
