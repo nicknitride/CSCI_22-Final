@@ -10,7 +10,7 @@ public class Server {
     public Server() {
     }
     public void finalizedServer() throws IOException{
-        InitializeServer serverInitialization = new InitializeServer();
+        InitializeServer serverInit = new InitializeServer();
     }
 
     private class InitializeServer {
@@ -20,11 +20,16 @@ public class Server {
         DataInputStream serverIn;
 
         public InitializeServer() throws IOException {
+            int clientCount = 0;
             serverSocket = new ServerSocket(52199);
-            randomSocket = serverSocket.accept();
+            while(clientCount<1) {
+                randomSocket = serverSocket.accept();//opens the socket on the server to connections
+                clientCount+=1;
+            }
+            serverSocket.close();//stops the server from accepting further connections
             serverOut = new DataOutputStream(randomSocket.getOutputStream());
             serverIn = new DataInputStream(randomSocket.getInputStream());
-            System.out.println("Server: Connection established.");
+            System.out.println("Server: Connection established and refusing other connections");
             serverOut.writeUTF("The server says hi!");
 
             Runnable readClient = new ReadChat();
