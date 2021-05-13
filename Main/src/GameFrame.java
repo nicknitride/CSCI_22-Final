@@ -25,7 +25,7 @@ public class GameFrame {
             public void actionPerformed(ActionEvent ae) {
                 gameCanvas.repaint();
                 counter+=1;
-                System.out.println(counter);
+                System.out.println("Counter:"+counter);
             }
         };
         timer = new javax.swing.Timer(20,timerActionListener);

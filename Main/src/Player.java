@@ -3,22 +3,18 @@ import java.awt.*;
 //This class contains the code that manages the player's appearance and functionality
 public class Player {
     Circle circle1= new Circle(320,480,40,Color.black);
-    int hitCount= 0;
+    int playerX =320, playerY = 390;
     PlayerRectangles friendlyRectangle;
     PlayerRectangles enemyRectangle;
     public void initPlayerRectangle(Graphics2D g2d){
-        friendlyRectangle = new PlayerRectangles(320,390,20,50,640,480);
+        friendlyRectangle = new PlayerRectangles(playerX,playerY,20,50,640,480);
         friendlyRectangle.draw(g2d);
     }
     public void initEnemyRectangle(Graphics2D g2d){
         enemyRectangle = new PlayerRectangles(320,0,20,50,640,480);
         enemyRectangle.draw(g2d);
-        circle1.draw(g2d);
-        circle1.move(8);
-        printHitCount();
     }
 
-    public void printHitCount(){
-        System.out.println("Hit count: "+hitCount);
-    }
+
+
 }

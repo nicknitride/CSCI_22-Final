@@ -9,7 +9,7 @@ Generates player rectangles
 To-do: Implement a JPEG overlay on top of the rectangles for player icons
  */
 public class PlayerRectangles {
-    int x,y,width,height,xSpeed, ySpeed, rightBorder, bottomBorder;
+    int x,y,width,height, rightBorder, bottomBorder;
     PlayerRectangles(int x, int y, int width, int height, int rightBorder, int bottomBorder){
         this.x=x;
         this.y=y;

@@ -1,3 +1,6 @@
+General (AKA Implement anywhere)
+1. A hit counter/hit detection
+2. Figure out which parts of the application needs to be divided into threads
 ##Find a way to implement either
 
 (In the Player class)
@@ -18,7 +21,7 @@ of circle objects and prevents the player from generating more
     }
 
     public void enemyMovement(int x){
-        /*use this when implementing KeyMap and actionMap in the player class
+        /* Use this when implementing KeyMap and actionMap in the player class
          * enemy movement right arrow key = +=-x
          * Friendly movement left arrow key = +=x
          * Implement collision/edge detection in the player class
