@@ -41,6 +41,10 @@ public class Player {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,false),"right");
     }
     //create a class that returns a JPanel with the input map and action map attached
+    public JPanel importFrameJPanel(JPanel panel){
+        return panel;
+    }
+
     public void initPlayerRectangle(Graphics2D g2d){
         friendlyRectangle = new PlayerRectangles(playerX,playerY,20,50,640,480);
         friendlyRectangle.draw(g2d);
