@@ -15,6 +15,6 @@ public class GameCanvas extends JComponent {
         g2d.addRenderingHints(rh);
 
         playerInstance.initPlayerRectangle(g2d);
-        playerInstance.initEnemyRectangle(g2d);
+        //playerInstance.initEnemyRectangle(g2d,/*add the PlayerRectangle instance returned by the server*/);
     }
 }
