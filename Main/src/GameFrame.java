@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,17 +8,27 @@ public class GameFrame {
     public GameCanvas gameCanvas;
     public Timer timer;
     private int counter;
+    public JPanel framePanel;
     public void setUpGUI(int width, int height){
         frame = new JFrame();
-        Container frameContainer = frame.getContentPane();
+        framePanel = (JPanel) frame.getContentPane();
 
         frame.setSize(width,height);
-        gameCanvas = new GameCanvas(width,height);
-        frameContainer.add(gameCanvas);
+        gameCanvas = new GameCanvas(width,height,exportJPanel());
+        framePanel.add(gameCanvas);
+
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
     }
+
+    public JPanel exportJPanel(){
+        return framePanel;
+    }
+
+
+
     public void setUpTimer(){
         ActionListener timerActionListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {

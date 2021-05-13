@@ -8,42 +8,19 @@ public class Player {
     PlayerRectangles friendlyRectangle;
     int playerX, playerY;
     int enemyX, enemyY;
-    InputMap inputMap;
-    ActionMap actionMap;
+
+
+
     public Player(){
         playerX = 320;
         playerY = 390;
-
-        inputMap = new InputMap();
-        actionMap = new ActionMap();
-
-        addMovementActionMap();
-        implementActionMap();
     }
 
-    public void addMovementActionMap(){
-        AbstractAction moveLeft = new AbstractAction() {
-            public void actionPerformed(ActionEvent ae) {
-                playerX-=5;
-            }
-        };
-        AbstractAction moveRight = new AbstractAction() {
-            public void actionPerformed(ActionEvent ae) {
-                playerX+=5;
-            }
-        };
-        actionMap.put("left",moveLeft);
-        actionMap.put("right",moveRight);
+    public void movePlayer(int x){
+        playerX+=x;
     }
 
-    public void implementActionMap(){
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0,false),"left");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,false),"right");
-    }
-    //create a class that returns a JPanel with the input map and action map attached
-    public JPanel importFrameJPanel(JPanel panel){
-        return panel;
-    }
+    //Action Map and InputMap were moved into game canvas
 
     public void initPlayerRectangle(Graphics2D g2d){
         friendlyRectangle = new PlayerRectangles(playerX,playerY,20,50,640,480);
