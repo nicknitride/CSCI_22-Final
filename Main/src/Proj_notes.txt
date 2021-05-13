@@ -1,6 +1,12 @@
 General (AKA Implement anywhere)
 1. A hit counter/hit detection
 2. Figure out which parts of the application needs to be divided into threads
+3. Implement a start menu and quit menu
+
+- For the requirement (Extend two classes)
+Title screen class extends Circle  (Big - Red Circle) (Once enter is clicked it disappears)
+(Maybe make a special class to shoot 3 circles at a time)
+
 ##Find a way to implement either
 
 (In the Player class)
