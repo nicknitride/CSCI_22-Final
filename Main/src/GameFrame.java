@@ -9,12 +9,13 @@ public class GameFrame {
     public Timer timer;
     private int counter;
     public JPanel framePanel;
+    public PlayerRectangles rectangle, enemyRectangle;
     public void setUpGUI(int width, int height){
         frame = new JFrame();
         framePanel = (JPanel) frame.getContentPane();
 
         frame.setSize(width,height);
-        gameCanvas = new GameCanvas(width,height,exportJPanel());
+        gameCanvas = new GameCanvas(width,height,exportJPanel(),enemyRectangle);
         framePanel.add(gameCanvas);
 
 
@@ -27,12 +28,19 @@ public class GameFrame {
         return framePanel;
     }
 
+    public PlayerRectangles getRectangle(){
+        return rectangle;
+    }
 
+    public void updateRectanglePosition(PlayerRectangles instance){
+        enemyRectangle = instance;
+    }
 
     public void setUpTimer(){
         ActionListener timerActionListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 gameCanvas.repaint();
+                rectangle = gameCanvas.getRectangle();
                 counter+=1;
                 //System.out.println("Counter:"+counter);
             }

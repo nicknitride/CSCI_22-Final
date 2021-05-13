@@ -37,6 +37,5 @@ public class PlayerRectangles {
         return height;
     }
 
-    //public displayEnemy() - implement later using DataOutputStream in Java Socket
 
 }

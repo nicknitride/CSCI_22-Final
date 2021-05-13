@@ -1,11 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
 
 //This class contains the code that manages the player's appearance and functionality
 public class Player {
-    Circle tempTestCircle = new Circle(320,480,40,Color.black);
     PlayerRectangles friendlyRectangle;
     int defaultRectangleWidth = 20, defaultRectangleHeight = 50;
     int playerX, playerY;
@@ -65,10 +65,18 @@ public class Player {
     }
 
     public void initEnemyRectangle(Graphics2D g2d, PlayerRectangles instance){
-        enemyY = instance.getY();
-        enemyX = instance.getX();
-        instance = new PlayerRectangles(enemyX,enemyY,defaultRectangleWidth,defaultRectangleHeight);
-        instance.draw(g2d);
+        try {
+            enemyX = instance.getX();
+            instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight);
+            instance.draw(g2d);
+        }catch (Exception exception){
+            System.out.println("enemy rectangle failed to render");
+            exception.printStackTrace();
+        }
+    }
+
+    public PlayerRectangles getFriendlyRectangle(){
+        return friendlyRectangle;
     }
 
 

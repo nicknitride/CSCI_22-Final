@@ -8,8 +8,9 @@ public class GameCanvas extends JComponent {
     JPanel interimJPanel;
     InputMap inputMap;
     ActionMap actionMap;
+    PlayerRectangles rectangle, enemyRectangle;
 
-    public GameCanvas(int w, int h,JPanel panel){
+    public GameCanvas(int w, int h,JPanel panel, PlayerRectangles enemyRectangle){
         setPreferredSize(new Dimension(w,h));
         playerInstance = new Player(w, h);
         interimJPanel = panel;
@@ -17,6 +18,7 @@ public class GameCanvas extends JComponent {
         actionMap = interimJPanel.getActionMap();
         playerInstance.initializeInputMap(inputMap);
         playerInstance.initializeActionMap(actionMap);
+        this.enemyRectangle = enemyRectangle;
     }
     @Override
     public void paintComponent(Graphics g){
@@ -25,7 +27,12 @@ public class GameCanvas extends JComponent {
         g2d.addRenderingHints(rh);
 
         playerInstance.initPlayerRectangle(g2d);
-        //playerInstance.initEnemyRectangle(g2d,/*add the PlayerRectangle instance returned by the server*/);
+        rectangle = playerInstance.getFriendlyRectangle();
+        playerInstance.initEnemyRectangle(g2d,enemyRectangle);
+    }
+
+    public PlayerRectangles getRectangle(){
+        return rectangle;
     }
 
 }

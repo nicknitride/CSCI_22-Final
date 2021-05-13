@@ -1,52 +1,66 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
-//This class contains the code that manages the game server's functionality. It also
-//contains the main method that instantiates and starts the server.
 public class GameServer {
     int connectedClientCount;
+    PlayerRectangles currentRectangle,enemyRectangle;
     ServerSocket serverSocket;
     Socket clientSocket;
-    ObjectOutputStream objectOut;
     ObjectInputStream objectIn;
+    ObjectOutputStream objectOut;
     public GameServer() throws IOException{
-        serverSocket = new ServerSocket(52300);
-
+        connectionAttempt();
+        initThreads();
     }
-    public class connectionAttempt implements Runnable{
-        public void run() {
-            while(connectedClientCount<1) {
-                try {
-                    clientSocket = serverSocket.accept();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            System.out.println("server full");
+    public void connectionAttempt(){
+        while(connectedClientCount<1) {
             try {
-                serverSocket.close();
+                serverSocket = new ServerSocket(52300);
+                clientSocket = serverSocket.accept();
+                OutputStream outputStream = clientSocket.getOutputStream();
+                InputStream inputStream = clientSocket.getInputStream();
+                objectOut = new ObjectOutputStream(outputStream);
+                objectIn = new ObjectInputStream(inputStream);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            connectedClientCount+=1;
+        }
+        System.out.println("server full");
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
 
-    public void initThreads() throws IOException {
+    public void initThreads(){
+        Thread read, write,guiThread;
         guiStarter gui = new guiStarter();
-        Thread guiThread = new Thread(gui);
+        guiThread = new Thread(gui);
+
+
+        Runnable readClient = new ReadChat();
+        Runnable sendToClient = new SendChat();
+        Runnable sendServerPos = new sendPosToClient();
+        Runnable getClientPos = new getClientPosition();
+
+        Thread sendPos = new Thread(sendServerPos);
+        Thread receivePos = new Thread(getClientPos);
+        read = new Thread(readClient);
+        write = new Thread(sendToClient);
+
+        sendPos.start();
+        receivePos.start();
         guiThread.start();
-        Runnable conRunnable = new connectionAttempt();
-        Thread conAttempt = new Thread(conRunnable);
-        conAttempt.start();
-        objectIn = new ObjectInputStream(clientSocket.getInputStream());
-        objectOut = new ObjectOutputStream(clientSocket.getOutputStream());
+        read.start();
+        write.start();
     }
 
-    public static class guiStarter implements Runnable{
+    public class guiStarter implements Runnable{
         GameFrame clientFrame;
         guiStarter(){
             clientFrame = new GameFrame();
@@ -55,13 +69,75 @@ public class GameServer {
         public void run() {
             clientFrame.setUpGUI(640,480);
             clientFrame.setUpTimer();
+            currentRectangle = clientFrame.getRectangle();
+            clientFrame.updateRectanglePosition(enemyRectangle);
+        }
+    }
+
+    public class sendPosToClient implements Runnable{
+        @Override
+        public void run() {
+            try {
+                objectOut.writeObject(currentRectangle);
+            } catch (IOException e) {
+                System.out.println("Failure: Server failed to send Object");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class getClientPosition implements Runnable{
+        @Override
+        public void run() {
+            try {
+                enemyRectangle = (PlayerRectangles) objectIn.readObject();
+            } catch (IOException e) {
+                System.out.println("Client failed to receive server position");
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class ReadChat implements Runnable {
+        String readClientMessage;
+
+        @Override
+        public void run() {
+            do {
+                try {
+                    readClientMessage = objectIn.readUTF();
+                    System.out.println("Client:" + readClientMessage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } while (!readClientMessage.contentEquals("quit"));
+            System.out.println("Client has left");
+        }
+
+    }
+
+    public class SendChat implements Runnable {
+        String serverMessage;
+        Scanner scan = new Scanner(System.in);
+
+        @Override
+        public void run() {
+            do {
+                serverMessage = scan.nextLine();
+                try {
+                    objectOut.writeUTF(serverMessage);
+                    objectOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }while(!serverMessage.contentEquals("quit"));
         }
     }
 
 
     public static void main(String[] args) throws IOException {
         GameServer server = new GameServer();
-        server.initThreads();
-        server.objectOut.writeChars("Test");
     }
 }
