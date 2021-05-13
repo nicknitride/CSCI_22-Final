@@ -23,9 +23,9 @@ import java.awt.geom.Rectangle2D;
 	that has been clearly noted with a proper citation in the comments
 	of my program.
 */
-public class MyRectangle {
+public class PlayerRectangles {
     int x,y,width,height,xSpeed, ySpeed, rightBorder, bottomBorder;
-    MyRectangle(int x, int y, int width, int height, int rightBorder, int bottomBorder){
+    PlayerRectangles(int x, int y, int width, int height, int rightBorder, int bottomBorder){
         this.x=x;
         this.y=y;
         this.width=width;
@@ -70,6 +70,24 @@ public class MyRectangle {
             return 1;
         }
         return 0;
+    }
+
+    public void friendlyKeybindingMovement(int x){
+        /*use this when implementing KeyMap and actionMap in the player class
+         * Friendly movement right arrow key = positive +=x
+         * Friendly movement left arrow key = negative +=-x
+         * Implement collision/edge detection in the player class
+         */
+
+    }
+
+    public void enemyMovement(int x){
+        /*use this when implementing KeyMap and actionMap in the player class
+         * enemy movement right arrow key = +=-x
+         * Friendly movement left arrow key = +=x
+         * Implement collision/edge detection in the player class
+         */
+
     }
 
     //public displayEnemy() - implement later using DataOutputStream in Java Socket

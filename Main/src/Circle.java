@@ -52,6 +52,6 @@ public class Circle{
     }
 
     public void move(int moveY) {
-        yPosition+=moveY;
+        yPosition-=moveY;
     }
 }
