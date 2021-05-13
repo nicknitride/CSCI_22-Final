@@ -1,0 +1,34 @@
+##Find a way to implement either
+
+(In the Player class)
+1 - Player presses space bar --> it generates a circle object which then gets displayed
+or
+2 - Player presses space bar --> it generates a scripted number
+of circle objects and prevents the player from generating more
+(This may make the networking code less complex)
+
+(In the PlayerRectangles class)
+   public void friendlyKeybindingMovement(int x){
+        /* use this when implementing KeyMap and actionMap in the player class
+         * Friendly movement right arrow key = positive +=x
+         * Friendly movement left arrow key = negative +=-x
+         * Implement collision/edge detection in the player class
+         */
+
+    }
+
+    public void enemyMovement(int x){
+        /*use this when implementing KeyMap and actionMap in the player class
+         * enemy movement right arrow key = +=-x
+         * Friendly movement left arrow key = +=x
+         * Implement collision/edge detection in the player class
+         */
+
+    }
+
+    //public displayEnemy() - implement later using DataOutputStream in Java Socket
+
+(In the GameStarter and GameServer class)
+Implement:
+1. Networking Code
+2. DataOutputStreams to return objects to mirror enemy player movement

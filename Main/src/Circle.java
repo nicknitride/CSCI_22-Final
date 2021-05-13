@@ -46,11 +46,6 @@ public class Circle{
         return xPosition;
     }
 
-    public int getRadius(){
-        int radius = size/2;
-        return radius;
-    }
-
     public void move(int moveY) {
         yPosition-=moveY;
     }
