@@ -9,18 +9,28 @@ public class GameStarter {
     ObjectOutputStream objectOut;
 
     public GameStarter() throws IOException {
-        /*
-        clientSocket = new Socket("localhost", 51244);
-        objectIn = new ObjectInputStream(clientSocket.getInputStream());
-        objectOut = new ObjectOutputStream(clientSocket.getOutputStream());
+        initThreads();
+    }
+    public class connectionAttempt implements Runnable{
+        public void run() {
+            try {
+                clientSocket = new Socket("localhost", 52300);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-         */
     }
 
-    public void initGUIThread(){
+    public void initThreads() throws IOException {
         guiStarter gui = new guiStarter();
         Thread guiThread = new Thread(gui);
         guiThread.start();
+        Runnable conRunnable = new connectionAttempt();
+        Thread conAttempt = new Thread(conRunnable);
+        conAttempt.start();
+        objectIn = new ObjectInputStream(clientSocket.getInputStream());
+        objectOut = new ObjectOutputStream(clientSocket.getOutputStream());
     }
 
     public static class guiStarter implements Runnable{
@@ -35,15 +45,8 @@ public class GameStarter {
         }
     }
 
-    public static void main(String[] args){
-        try {
-            GameStarter game = new GameStarter();
-            game.initGUIThread();
-        } catch (IOException exception){
-            System.out.println("Error initializing game thread");
-            exception.printStackTrace();
-        }
-
-
+    public static void main(String[] args) throws IOException {
+        GameStarter game = new GameStarter();
+        String message = game.objectIn.readUTF();
     }
 }
