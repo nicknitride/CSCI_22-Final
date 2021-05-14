@@ -1,7 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class GameServer {
     int connectedClientCount;
@@ -10,6 +9,7 @@ public class GameServer {
     Socket clientSocket;
     ObjectInputStream objectIn;
     ObjectOutputStream objectOut;
+    GameFrame serverFrame;
     public void connectionAttempt(){
         while(connectedClientCount<1) {
             try {
@@ -21,6 +21,7 @@ public class GameServer {
                 objectOut = new ObjectOutputStream(outputStream);
                 objectIn = new ObjectInputStream(inputStream);
             } catch (IOException e) {
+                System.out.println("Server failed the connection attempt");
                 e.printStackTrace();
             }
             connectedClientCount+=1;
@@ -34,109 +35,86 @@ public class GameServer {
     }
 
 
-    public void initThreads(){
-        Thread read, write,guiThread;
+    public void initGUIThread(){
         guiStarter gui = new guiStarter();
-        guiThread = new Thread(gui);
-
-
-        Runnable readClient = new ReadChat();
-        Runnable sendToClient = new SendChat();
-        Runnable sendServerPos = new sendPosToClient();
-        Runnable getClientPos = new getClientPosition();
-
-        Thread sendPos = new Thread(sendServerPos);
-        Thread receivePos = new Thread(getClientPos);
-        read = new Thread(readClient);
-        write = new Thread(sendToClient);
-
-        sendPos.start();
-        receivePos.start();
+        Thread guiThread = new Thread(gui);
         guiThread.start();
-        read.start();
-        write.start();
+
     }
+
+
 
     public class guiStarter implements Runnable{
-        GameFrame clientFrame;
+
         guiStarter(){
-            clientFrame = new GameFrame();
+            serverFrame = new GameFrame();
         }
         @Override
         public void run() {
-            clientFrame.setUpGUI(640,480);
-            clientFrame.setUpTimer();
-            currentRectangle = clientFrame.getRectangle();
-            clientFrame.updateRectanglePosition(enemyRectangle);
+            serverFrame.setUpGUI(640,480);//sets up the GUI
+            serverFrame.setUpTimer();//runs a timer
+            currentRectangle = serverFrame.getRectangle();//gets the current rectangle which is sent to the client
+            while (true) {
+                serverFrame.updateRectanglePosition(enemyRectangle);//Sends the received enemy rectangle to the client frame
+            }
         }
     }
 
-    public class sendPosToClient implements Runnable{
+
+    public class SendRectangle implements Runnable{
+        @Override
+        public void run() {
+            while(true){
+                try {
+                    if (currentRectangle != null) {
+                        objectOut.writeObject(currentRectangle);//Writes the server's rectangle out
+                        objectOut.flush();
+                    } else {
+                        System.out.println("Server rectangle was null and could not be sent");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public class ReceiveClientRectangle implements Runnable{
         @Override
         public void run() {
             try {
-                objectOut.writeObject(currentRectangle);
-            } catch (IOException e) {
-                System.out.println("Failure: Server failed to send Object");
+                Object obj = objectIn.readObject();
+                if (obj instanceof PlayerRectangles) {
+                    enemyRectangle = (PlayerRectangles) obj;//Reads the client's rectangle
+                }
+                else {
+                    System.out.println("Object received by server wasn't of the PlayerRectangle class");
+                }
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public class getClientPosition implements Runnable{
-        @Override
-        public void run() {
-            try {
-                enemyRectangle = (PlayerRectangles) objectIn.readObject();
-            } catch (IOException e) {
-                System.out.println("Client failed to receive server position");
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    public void initIOThread (){
+        Thread in, out;
+        Runnable Receive, Send;
+        Receive = new ReceiveClientRectangle();
+        Send = new SendRectangle();
 
-    public class ReadChat implements Runnable {
-        String readClientMessage;
+        in = new Thread(Receive);
+        out = new Thread(Send);
 
-        @Override
-        public void run() {
-            do {
-                try {
-                    readClientMessage = objectIn.readUTF();
-                    System.out.println("Client:" + readClientMessage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } while (!readClientMessage.contentEquals("quit"));
-            System.out.println("Client has left");
-        }
-
-    }
-
-    public class SendChat implements Runnable {
-        String serverMessage;
-        Scanner scan = new Scanner(System.in);
-
-        @Override
-        public void run() {
-            do {
-                serverMessage = scan.nextLine();
-                try {
-                    objectOut.writeUTF(serverMessage);
-                    objectOut.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }while(!serverMessage.contentEquals("quit"));
-        }
+        in.start();
+        out.start();
     }
 
 
-    public static void main(String[] args) throws IOException {
+
+    public static void main(String[] args){
         GameServer server = new GameServer();
         server.connectionAttempt();
-        server.initThreads();
+        server.initGUIThread();
+        server.initIOThread();
     }
 }

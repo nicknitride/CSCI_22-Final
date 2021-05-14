@@ -9,7 +9,7 @@ public class Player{
     PlayerRectangles friendlyRectangle;
     int defaultRectangleWidth = 20, defaultRectangleHeight = 50;
     int playerX, playerY;
-    int enemyX, enemyY;
+    int enemyX,enemyY;//Enemy Y will be used to detect collision between enemy fire and the squares
     int rightBorder, bottomBorder;
     public Player(int width, int height){
         playerX = 320;
@@ -46,7 +46,7 @@ public class Player{
             public void actionPerformed(ActionEvent ae) {
 
             }
-        };
+        };//TODO - implement player fire hit detection and keybinding
          */
         actionMap.put("left",moveLeft);
         actionMap.put("right",moveRight);
@@ -67,9 +67,9 @@ public class Player{
             enemyX = instance.getX();
             instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight);
             instance.draw(g2d);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             System.out.println("Enemy rectangle failed to render");
-            exception.printStackTrace();
+            System.out.println("Check if still null");
         }
     }
 

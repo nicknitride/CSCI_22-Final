@@ -7,7 +7,6 @@ public class GameFrame {
     public JFrame frame;
     public GameCanvas gameCanvas;
     public Timer timer;
-    private int counter;
     public JPanel framePanel;
     public PlayerRectangles rectangle, enemyRectangle;
     public void setUpGUI(int width, int height){
@@ -15,13 +14,18 @@ public class GameFrame {
         framePanel = (JPanel) frame.getContentPane();
 
         frame.setSize(width,height);
-        gameCanvas = new GameCanvas(width,height,exportJPanel(),enemyRectangle);
+        gameCanvas = new GameCanvas(width,height,exportJPanel(),enemyRectangle);//GameFrame's enemy rectangle
+        //gets sent to GameCanvas
         framePanel.add(gameCanvas);
 
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    public void updateRectanglePosition(PlayerRectangles instance){//Enemy rectangle is set from the main method
+        enemyRectangle = instance;
     }
 
     public JPanel exportJPanel(){
@@ -32,17 +36,13 @@ public class GameFrame {
         return rectangle;
     }
 
-    public void updateRectanglePosition(PlayerRectangles instance){
-        enemyRectangle = instance;
-    }
+
 
     public void setUpTimer(){
         ActionListener timerActionListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 gameCanvas.repaint();
                 rectangle = gameCanvas.getRectangle();
-                counter+=1;
-                //System.out.println("Counter:"+counter);
             }
         };
         timer = new javax.swing.Timer(20,timerActionListener);

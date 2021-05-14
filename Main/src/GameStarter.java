@@ -1,6 +1,6 @@
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
+
 /*
     Attempt to integrate the chat code and position code into a singular thread
  */
@@ -22,25 +22,10 @@ public class GameStarter{
         }
     }
 
-    public void initThreads(){
+    public void initGUIThread(){
         guiStarter gui = new guiStarter();
         Thread guiThread = new Thread(gui);
         guiThread.start();
-
-        Runnable readClient = new ReadChat();
-        Runnable sendToClient = new SendChat();
-        Thread read, write;
-        read = new Thread(readClient);
-        write = new Thread(sendToClient);
-        read.start();
-        write.start();
-
-        Runnable sendPosToServer = new sendPosToServer();
-        Runnable getServerPos = new getServerPosition();
-        Thread sendPos = new Thread(sendPosToServer);
-        Thread receivePos = new Thread(getServerPos);
-        sendPos.start();
-        receivePos.start();
     }
 
     public class guiStarter implements Runnable{
@@ -57,72 +42,56 @@ public class GameStarter{
         }
     }
 
-    public class sendPosToServer implements Runnable{
+    public class SendRectangle implements Runnable{
+        @Override
+        public void run() {
+            while(true){
+                try {
+                    if (currentRectangle != null) {
+                        objectOut.writeObject(currentRectangle);
+                        objectOut.flush();
+                    }  else {
+                        System.out.println("Client rectangle was null and could not be sent");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public class ReceiveServerRectangle implements Runnable{
         @Override
         public void run() {
             try {
-                objectOut.writeObject(currentRectangle);
-            } catch (IOException e) {
-                System.out.println("Failure: Client failed to send object");
+                Object obj = objectIn.readObject();
+                if(obj instanceof PlayerRectangles) {
+                    enemyRectangle = (PlayerRectangles) obj;
+                }
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public class getServerPosition implements Runnable{
-        @Override
-        public void run() {
-            try {
-                enemyRectangle = (PlayerRectangles) objectIn.readObject();
-            } catch (IOException e) {
-                System.out.println("Client failed to receive server position");
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+    public void initIOThread (){
+        Thread in, out;
+        Runnable Receive, Send;
+        Receive = new ReceiveServerRectangle();
+        Send = new SendRectangle();
+
+        in = new Thread(Receive);
+        out = new Thread(Send);
+
+        in.start();
+        out.start();
     }
 
-    public class ReadChat implements Runnable {
-        String readClientMessage;
 
-        @Override
-        public void run() {
-            do {
-                try {
-                    readClientMessage = objectIn.readUTF();
-                    System.out.println("Server:" + readClientMessage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } while (!readClientMessage.contentEquals("quit"));
-            System.out.println("Server has left the chat");
-        }
-
-    }
-
-    public class SendChat implements Runnable {
-        String serverMessage;
-        Scanner scan = new Scanner(System.in);
-
-        @Override
-        public void run() {
-            do {
-                serverMessage = scan.nextLine();
-                try {
-                    objectOut.writeUTF(serverMessage);
-                    objectOut.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }while(!serverMessage.contentEquals("quit"));
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         GameStarter client = new GameStarter();
         client.connectionAttempt();
-        client.initThreads();
-    }///write network code to send the rectangle object we receive from GameFrame
-    //and receive that rectangle on the opposite end where it gets forwarded back to the player class
+        client.initGUIThread();
+        client.initIOThread();
+    }
 }

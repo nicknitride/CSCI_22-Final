@@ -10,7 +10,8 @@ public class GameCanvas extends JComponent {
     ActionMap actionMap;
     PlayerRectangles rectangle, enemyRectangle;
 
-    public GameCanvas(int w, int h,JPanel panel, PlayerRectangles enemyRectangle){
+    public GameCanvas(int w, int h,JPanel panel, PlayerRectangles enemyRectangle){//The constructor then sets the enemy rectangle to a class variable
+        //which is used in the paintComponent method
         setPreferredSize(new Dimension(w,h));
         playerInstance = new Player(w, h);
         interimJPanel = panel;
@@ -28,7 +29,7 @@ public class GameCanvas extends JComponent {
 
         playerInstance.initPlayerRectangle(g2d);
         rectangle = playerInstance.getFriendlyRectangle();
-        playerInstance.initEnemyRectangle(g2d,enemyRectangle);
+        playerInstance.initEnemyRectangle(g2d,enemyRectangle);//This gets passed to the player method
     }
 
     public PlayerRectangles getRectangle(){
