@@ -93,12 +93,12 @@ public class GameStarter {
             do {
                 try {
                     readClientMessage = objectIn.readUTF();
-                    System.out.println("Client:" + readClientMessage);
+                    System.out.println("Server:" + readClientMessage);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } while (!readClientMessage.contentEquals("quit"));
-            System.out.println("Client has left");
+            System.out.println("Server has left the chat");
         }
 
     }
