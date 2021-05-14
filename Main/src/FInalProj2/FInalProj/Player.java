@@ -4,9 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 
 //This class contains the code that manages the player's appearance and functionality
-public class Player{
+public class Player implements Serializable {
     PlayerRectangles friendlyRectangle;
     int defaultRectangleWidth = 20, defaultRectangleHeight = 50;
     int playerX, playerY;

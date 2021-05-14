@@ -6,7 +6,6 @@ import java.net.Socket;
 
 public class GameServer {
     int connectedClientCount;
-    PlayerRectangles currentRectangle,enemyRectangle;
     ServerSocket serverSocket;
     Socket clientSocket;
     ObjectInputStream objectIn;
@@ -66,5 +65,7 @@ public class GameServer {
         GameServer server = new GameServer();
         server.connectionAttempt();
         server.initGUIThread();
+
+
     }
 }

@@ -3,7 +3,6 @@ package FInalProj2.FInalProj;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -13,7 +12,7 @@ public class GameFrame {
     public GameCanvas gameCanvas;
     public Timer timer;
     public JPanel framePanel;
-    public PlayerRectangles rectangle, enemyRectangle;
+    public PlayerRectangles rectangle;
     public ObjectOutputStream dataOut;
     public ObjectInputStream dataIn;
 

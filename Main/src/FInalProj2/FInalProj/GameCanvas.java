@@ -37,18 +37,27 @@ public class GameCanvas extends JComponent {
         playerInstance.initPlayerRectangle(g2d);
         rectangle = playerInstance.getFriendlyRectangle();
         try{
-            dataOut.reset();
-            dataOut.writeObject(rectangle);
-            dataOut.flush();
+            if(rectangle != null) {
+                dataOut.reset();
+                dataOut.writeObject(rectangle);
+                dataOut.flush();
+            }
+            else {
+                System.out.println("Rectangle in canvas = null");
+            }
         } catch (IOException e) {
             System.out.println("Error writing the non-enemy rectangle");
         }
         try {
-            enemyRectangle = (PlayerRectangles) dataIn.readObject();
-            playerInstance.initEnemyRectangle(g2d,enemyRectangle);
-        } catch (IOException e) {
-            System.out.println("GameCanvas may have encountered a null object");
-        } catch (ClassNotFoundException e) {
+            Object obj = dataIn.readObject();
+            if(obj instanceof PlayerRectangles) {
+                enemyRectangle = (PlayerRectangles) obj;
+                playerInstance.initEnemyRectangle(g2d, enemyRectangle);
+            }
+            else {
+                System.out.println("Player rectangle was null");
+            }
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println("GameCanvas may have encountered a null object");
         }
     }

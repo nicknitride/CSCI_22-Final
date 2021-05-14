@@ -41,6 +41,7 @@ public class GameStarter{
             clientFrame.setUpTimer();
             clientFrame.setObjOut(objectOut);
             clientFrame.setObjIn(objectIn);
+
         }
     }
 
