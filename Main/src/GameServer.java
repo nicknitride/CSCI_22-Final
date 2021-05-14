@@ -10,14 +10,11 @@ public class GameServer {
     Socket clientSocket;
     ObjectInputStream objectIn;
     ObjectOutputStream objectOut;
-    public GameServer() throws IOException{
-        connectionAttempt();
-        initThreads();
-    }
     public void connectionAttempt(){
         while(connectedClientCount<1) {
             try {
                 serverSocket = new ServerSocket(52300);
+                System.out.println("Server open and awaiting connection");
                 clientSocket = serverSocket.accept();
                 OutputStream outputStream = clientSocket.getOutputStream();
                 InputStream inputStream = clientSocket.getInputStream();
@@ -28,7 +25,7 @@ public class GameServer {
             }
             connectedClientCount+=1;
         }
-        System.out.println("server full");
+        System.out.println("Server at capacity");
         try {
             serverSocket.close();
         } catch (IOException e) {
@@ -139,5 +136,7 @@ public class GameServer {
 
     public static void main(String[] args) throws IOException {
         GameServer server = new GameServer();
+        server.connectionAttempt();
+        server.initThreads();
     }
 }

@@ -16,11 +16,13 @@ public class PlayerRectangles {
         this.width=width;
         this.height=height;
     }
+
     public void draw(Graphics2D g2d){
         Rectangle2D.Double rectangle2D = new Rectangle2D.Double(x,y,width,height);
         g2d.setColor(Color.BLACK);
         g2d.fill(rectangle2D);
     }
+
     public int getX() {
         return x;
     }

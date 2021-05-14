@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 //This class contains the code that manages the player's appearance and functionality
-public class Player {
+public class Player{
     PlayerRectangles friendlyRectangle;
     int defaultRectangleWidth = 20, defaultRectangleHeight = 50;
     int playerX, playerY;
@@ -70,7 +70,7 @@ public class Player {
             instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight);
             instance.draw(g2d);
         }catch (Exception exception){
-            System.out.println("enemy rectangle failed to render");
+            System.out.println("Enemy rectangle failed to render");
             exception.printStackTrace();
         }
     }

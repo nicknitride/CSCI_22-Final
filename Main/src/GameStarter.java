@@ -1,17 +1,15 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
-
-public class GameStarter {
+/*
+    Attempt to integrate the chat code and position code into a singular thread
+ */
+public class GameStarter{
     PlayerRectangles currentRectangle, enemyRectangle;
     Socket clientSocket;
     ObjectInputStream objectIn;
     ObjectOutputStream objectOut;
 
-    public GameStarter() throws IOException {
-        connectionAttempt();
-        initThreads();
-    }
     public void connectionAttempt(){
     try {
         clientSocket = new Socket("localhost", 52300);
@@ -122,7 +120,9 @@ public class GameStarter {
     }
 
     public static void main(String[] args) throws IOException {
-        GameStarter game = new GameStarter();
+        GameStarter client = new GameStarter();
+        client.connectionAttempt();
+        client.initThreads();
     }///write network code to send the rectangle object we receive from GameFrame
     //and receive that rectangle on the opposite end where it gets forwarded back to the player class
 }
