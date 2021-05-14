@@ -78,7 +78,4 @@ public class Player{
     public PlayerRectangles getFriendlyRectangle(){
         return friendlyRectangle;
     }
-
-
-
 }
