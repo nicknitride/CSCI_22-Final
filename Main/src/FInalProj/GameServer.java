@@ -1,3 +1,5 @@
+package FInalProj;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -53,8 +55,8 @@ public class GameServer {
         public void run() {
             serverFrame.setUpGUI(640,480);//sets up the GUI
             serverFrame.setUpTimer();//runs a timer
-            currentRectangle = serverFrame.getRectangle();//gets the current rectangle which is sent to the client
             while (true) {
+                currentRectangle = serverFrame.getRectangle();//gets the current rectangle which is sent to the client
                 serverFrame.updateRectanglePosition(enemyRectangle);//Sends the received enemy rectangle to the client frame
             }
         }
@@ -105,8 +107,9 @@ public class GameServer {
         in = new Thread(Receive);
         out = new Thread(Send);
 
-        in.start();
         out.start();
+        in.start();
+
     }
 
 

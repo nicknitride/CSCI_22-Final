@@ -1,3 +1,5 @@
+package FInalProj;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -37,8 +39,10 @@ public class GameStarter{
         public void run() {
             clientFrame.setUpGUI(640,480);
             clientFrame.setUpTimer();
-            currentRectangle = clientFrame.getRectangle();
-            clientFrame.updateRectanglePosition(enemyRectangle);
+            while (true) {
+                currentRectangle = clientFrame.getRectangle();
+                clientFrame.updateRectanglePosition(enemyRectangle);
+            }
         }
     }
 
@@ -83,8 +87,8 @@ public class GameStarter{
         in = new Thread(Receive);
         out = new Thread(Send);
 
-        in.start();
         out.start();
+        in.start();
     }
 
 
@@ -93,5 +97,8 @@ public class GameStarter{
         client.connectionAttempt();
         client.initGUIThread();
         client.initIOThread();
-    }
+    }/*TODO write code that passes the input and output streams all the way to the FInalProj.Player class
+        And remove remnant code which passes along the current and enemy rectangles from both client
+        and server
+    */
 }

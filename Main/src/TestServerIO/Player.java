@@ -1,8 +1,9 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
-import java.util.ArrayList;
+package TestServerIO;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 //This class contains the code that manages the player's appearance and functionality
 public class Player{

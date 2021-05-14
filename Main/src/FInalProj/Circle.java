@@ -1,4 +1,4 @@
-/**
+package FInalProj; /**
  @author Nicholo Patrick C. Pardines (193821)
  @version March 29, 2020
  This class draws an ellipse using the Ellipse2D class and contains a method defining its movement.

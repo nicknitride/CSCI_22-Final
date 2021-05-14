@@ -4,19 +4,19 @@ General (AKA Implement anywhere)
 3. Implement a start menu and quit menu
 
 - For the requirement (Extend two classes)
-Title screen class extends Circle  (Big - Red Circle) (Once enter is clicked it disappears)
+Title screen class extends FInalProj.Circle  (Big - Red FInalProj.Circle) (Once enter is clicked it disappears)
 (Maybe make a special class to shoot 3 circles at a time)
 
 ##Find a way to implement either
 
-(In the Player class)
-1 - Player presses space bar --> it generates a circle object which then gets displayed
+(In the FInalProj.Player class)
+1 - FInalProj.Player presses space bar --> it generates a circle object which then gets displayed
 or
-2 - Player presses space bar --> it generates a scripted number
+2 - FInalProj.Player presses space bar --> it generates a scripted number
 of circle objects and prevents the player from generating more
 (This may make the networking code less complex)
 
-(In the PlayerRectangles class)
+(In the FInalProj.PlayerRectangles class)
    public void friendlyKeybindingMovement(int x){
         /* use this when implementing KeyMap and actionMap in the player class
          * Friendly movement right arrow key = positive +=x
@@ -37,7 +37,7 @@ of circle objects and prevents the player from generating more
 
     //public displayEnemy() - implement later using DataOutputStream in Java Socket
 
-(In the GameStarter and GameServer class)
+(In the FInalProj.GameStarter and FInalProj.GameServer class)
 Implement:
 1. Networking Code
 2. DataOutputStreams to return objects to mirror enemy player movement

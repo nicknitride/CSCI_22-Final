@@ -1,3 +1,5 @@
+package TestServerIO;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,8 +16,8 @@ public class GameFrame {
         framePanel = (JPanel) frame.getContentPane();
 
         frame.setSize(width,height);
-        gameCanvas = new GameCanvas(width,height,exportJPanel(),enemyRectangle);//GameFrame's enemy rectangle
-        //gets sent to GameCanvas
+        gameCanvas = new GameCanvas(width,height,exportJPanel(),enemyRectangle);//FInalProj.GameFrame's enemy rectangle
+        //gets sent to FInalProj.GameCanvas
         framePanel.add(gameCanvas);
 
 
@@ -45,7 +47,7 @@ public class GameFrame {
                 rectangle = gameCanvas.getRectangle();
             }
         };
-        timer = new javax.swing.Timer(20,timerActionListener);
+        timer = new Timer(20,timerActionListener);
         timer.start();
     }
 }
