@@ -11,8 +11,6 @@ public class Player{
     int playerX, playerY;
     int enemyX, enemyY;
     int rightBorder, bottomBorder;
-    ArrayList<Circle> circleArray = new ArrayList<>();
-
     public Player(int width, int height){
         playerX = 320;
         playerY = 390;
