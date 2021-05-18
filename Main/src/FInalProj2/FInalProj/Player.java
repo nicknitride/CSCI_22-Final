@@ -64,11 +64,11 @@ public class Player implements Serializable {
         friendlyRectangle.draw(g2d);
     }
 
-    public void initEnemyRectangle(Graphics2D g2d, PlayerRectangles instance){
+    public void initEnemyRectangle(Graphics2D g2d, int x){
         try {
-            enemyX = instance.getX();
-            instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight);
-            instance.draw(g2d);
+            enemyX = x;
+            PlayerRectangles  enemyRectangle = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight);
+            enemyRectangle.draw(g2d);
         } catch (Exception exception) {
             System.out.println("Enemy rectangle failed to render");
             System.out.println("Check if still null");

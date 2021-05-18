@@ -1,7 +1,5 @@
 package TestServerIO;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;

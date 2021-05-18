@@ -1,0 +1,4 @@
+This module has working server IO
+
+- This may be because threads are unable to share data
+i.e. The data outputstream of the main class doesn't get properly sent to the player class

@@ -8,8 +8,8 @@ public class GameServer {
     int connectedClientCount;
     ServerSocket serverSocket;
     Socket clientSocket;
-    ObjectInputStream objectIn;
-    ObjectOutputStream objectOut;
+    public static ObjectInputStream objectIn;
+    public static ObjectOutputStream objectOut;
     GameFrame serverFrame;
     public void connectionAttempt(){
         while(connectedClientCount<1) {
@@ -65,7 +65,5 @@ public class GameServer {
         GameServer server = new GameServer();
         server.connectionAttempt();
         server.initGUIThread();
-
-
     }
 }

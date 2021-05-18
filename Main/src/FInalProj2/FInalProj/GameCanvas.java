@@ -14,11 +14,11 @@ public class GameCanvas extends JComponent {
     InputMap inputMap;
     ActionMap actionMap;
     PlayerRectangles rectangle, enemyRectangle;
-    ObjectOutputStream dataOut;
-    ObjectInputStream dataIn;
+    public static ObjectOutputStream dataOut;
+    public static ObjectInputStream dataIn;
 
-    public GameCanvas(int w, int h,JPanel panel, ObjectOutputStream dataOut, ObjectInputStream dataIn){
-        setPreferredSize(new Dimension(w,h));
+    public GameCanvas(int w, int h, JPanel panel, ObjectOutputStream dataOut, ObjectInputStream dataIn) {
+        setPreferredSize(new Dimension(w, h));
         playerInstance = new Player(w, h);
         interimJPanel = panel;
         inputMap = interimJPanel.getInputMap();
@@ -28,37 +28,30 @@ public class GameCanvas extends JComponent {
         this.dataOut = dataOut;
         this.dataIn = dataIn;
     }
+
     @Override
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.addRenderingHints(rh);
 
         playerInstance.initPlayerRectangle(g2d);
         rectangle = playerInstance.getFriendlyRectangle();
-        try{
-            if(rectangle != null) {
-                dataOut.reset();
-                dataOut.writeObject(rectangle);
+        try {
+            if (rectangle != null) {
+                dataOut.writeInt(rectangle.getX());
                 dataOut.flush();
-            }
-            else {
+            } else {
                 System.out.println("Rectangle in canvas = null");
             }
         } catch (IOException e) {
             System.out.println("Error writing the non-enemy rectangle");
         }
         try {
-            Object obj = dataIn.readObject();
-            if(obj instanceof PlayerRectangles) {
-                enemyRectangle = (PlayerRectangles) obj;
-                playerInstance.initEnemyRectangle(g2d, enemyRectangle);
-            }
-            else {
-                System.out.println("Player rectangle was null");
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("GameCanvas may have encountered a null object");
+            int x = dataIn.readInt();
+            playerInstance.initEnemyRectangle(g2d, x);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 }
