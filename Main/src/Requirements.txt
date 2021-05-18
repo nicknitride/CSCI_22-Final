@@ -1,8 +1,0 @@
-Project Requirements
-The program must contain, but is not limited to, the following:
-● graphical user interface
-● inheritance (you must define a class that will be extended by at least two of the other classes that
-you also defined)
-● inner classes
-● animation using Threads or Timers
-● networking to send and receive game data
