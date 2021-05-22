@@ -2,6 +2,9 @@ package FInalProj;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import javax.swing.*;
 
 //This class contains the code that manages the player's appearance and functionality
@@ -11,11 +14,15 @@ public class Player{
     int playerX, playerY;
     int enemyX,enemyY;//Enemy Y will be used to detect collision between enemy fire and the squares
     int rightBorder, bottomBorder;
-    public Player(int width, int height){
+    ObjectOutputStream oOut;
+    ObjectInputStream oIn;
+    public Player(int width, int height, ObjectOutputStream oOut, ObjectInputStream oIn){
         playerX = 320;
         playerY = 390;
         rightBorder = width;
         bottomBorder = height;
+        this.oOut = oOut;
+        this.oIn = oIn;
     }
 
     public void movePlayer(int x){
@@ -40,14 +47,6 @@ public class Player{
                 }
             }
         };
-        /* Implement later
-        AbstractAction fireWeapon = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-            }
-        };//TODO - implement player fire hit detection and keybinding
-         */
         actionMap.put("left",moveLeft);
         actionMap.put("right",moveRight);
     }
@@ -59,17 +58,31 @@ public class Player{
     }
     public void initPlayerRectangle(Graphics2D g2d){
         friendlyRectangle = new PlayerRectangles(playerX,playerY,defaultRectangleWidth,defaultRectangleHeight);
-        friendlyRectangle.draw(g2d);
+        try{
+            oOut.writeObject(friendlyRectangle);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            if(friendlyRectangle==null){
+                System.out.println("Friendly rectangle was null");
+            }
+        } finally {
+            friendlyRectangle.draw(g2d);
+        }
+
     }
 
-    public void initEnemyRectangle(Graphics2D g2d, PlayerRectangles instance){
+    public void initEnemyRectangle(Graphics2D g2d){
         try {
-            enemyX = instance.getX();
-            instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight);
-            instance.draw(g2d);
+            PlayerRectangles instance = (PlayerRectangles) oIn.readObject();
+            if (instance != null) {
+                enemyX = instance.getX();
+                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight);
+                instance.draw(g2d);
+            } else {
+                System.out.println("Enemy instance is null");
+            }
         } catch (Exception exception) {
-            System.out.println("Enemy rectangle failed to render");
-            System.out.println("Check if still null");
+            exception.printStackTrace();
         }
     }
 

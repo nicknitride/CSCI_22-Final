@@ -6,7 +6,6 @@ import java.net.Socket;
 
 public class GameServer {
     int connectedClientCount;
-    PlayerRectangles currentRectangle,enemyRectangle;
     ServerSocket serverSocket;
     Socket clientSocket;
     ObjectInputStream objectIn;
@@ -41,83 +40,22 @@ public class GameServer {
         guiStarter gui = new guiStarter();
         Thread guiThread = new Thread(gui);
         guiThread.start();
-
     }
 
-
-
     public class guiStarter implements Runnable{
-
         guiStarter(){
             serverFrame = new GameFrame();
         }
         @Override
         public void run() {
-            serverFrame.setUpGUI(640,480);//sets up the GUI
-            serverFrame.setUpTimer();//runs a timer
-            while (true) {
-                currentRectangle = serverFrame.getRectangle();//gets the current rectangle which is sent to the client
-                serverFrame.updateRectanglePosition(enemyRectangle);//Sends the received enemy rectangle to the client frame
-            }
+            serverFrame.setUpGUI(640,480,objectOut,objectIn);
+            serverFrame.setUpTimer();
         }
     }
-
-
-    public class SendRectangle implements Runnable{
-        @Override
-        public void run() {
-            while(true){
-                try {
-                    if (currentRectangle != null) {
-                        objectOut.writeObject(currentRectangle);//Writes the server's rectangle out
-                        objectOut.flush();
-                    } else {
-                        System.out.println("Server rectangle was null and could not be sent");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public class ReceiveClientRectangle implements Runnable{
-        @Override
-        public void run() {
-            try {
-                Object obj = objectIn.readObject();
-                if (obj instanceof PlayerRectangles) {
-                    enemyRectangle = (PlayerRectangles) obj;//Reads the client's rectangle
-                }
-                else {
-                    System.out.println("Object received by server wasn't of the PlayerRectangle class");
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void initIOThread (){
-        Thread in, out;
-        Runnable Receive, Send;
-        Receive = new ReceiveClientRectangle();
-        Send = new SendRectangle();
-
-        in = new Thread(Receive);
-        out = new Thread(Send);
-
-        out.start();
-        in.start();
-
-    }
-
-
 
     public static void main(String[] args){
         GameServer server = new GameServer();
         server.connectionAttempt();
         server.initGUIThread();
-        server.initIOThread();
     }
 }
