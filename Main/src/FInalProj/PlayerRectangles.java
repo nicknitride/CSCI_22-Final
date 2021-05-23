@@ -42,5 +42,5 @@ public class PlayerRectangles implements Serializable {
         return height;
     }
 
-
+    //TODO implement collision detection
 }

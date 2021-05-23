@@ -18,7 +18,7 @@ public class GameCanvas extends JComponent {
         setPreferredSize(new Dimension(w,h));
         playerInstance = new Player(w, h, oOut, oIn);
         interimJPanel = panel;
-        inputMap = interimJPanel.getInputMap();
+        inputMap = interimJPanel.getInputMap();//Passes the InputMap taken from GameFrame to the Playerinstance
         actionMap = interimJPanel.getActionMap();
         playerInstance.initializeInputMap(inputMap);
         playerInstance.initializeActionMap(actionMap);

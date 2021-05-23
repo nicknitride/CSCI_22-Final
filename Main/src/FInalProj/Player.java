@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Scanner;
 import javax.swing.*;
 
 //This class contains the code that manages the player's appearance and functionality
@@ -24,12 +25,9 @@ public class Player{
         this.oOut = oOut;
         this.oIn = oIn;
     }
-
     public void movePlayer(int x){
         playerX+=x;
     }
-
-
     public void initializeActionMap(ActionMap actionMap){
         AbstractAction moveLeft = new AbstractAction() {
             public void actionPerformed(ActionEvent ae) {
@@ -45,13 +43,11 @@ public class Player{
                 if(playerX+defaultRectangleWidth>=rightBorder){
                     movePlayer(-5);
                 }
-            }
+            }//TODO implement an actionMap to create projectiles - assign the actionMap to a key using inputMap later on (High Priority)
         };
         actionMap.put("left",moveLeft);
         actionMap.put("right",moveRight);
     }
-
-
     public void initializeInputMap(InputMap inputMap){
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0,false),"left");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,false),"right");
@@ -70,23 +66,24 @@ public class Player{
         }
 
     }
-
     public void initEnemyRectangle(Graphics2D g2d){
         try {
-            PlayerRectangles instance = (PlayerRectangles) oIn.readObject();
-            if (instance != null) {
+            Object receivedObject = oIn.readObject();
+            if (receivedObject instanceof PlayerRectangles) {
+                PlayerRectangles instance = (PlayerRectangles) receivedObject;
                 enemyX = instance.getX();
                 instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight);
                 instance.draw(g2d);
-            } else {
-                System.out.println("Enemy instance is null");
             }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch(Exception ex){
+            ex.printStackTrace();
         }
-    }
 
+
+    }
     public PlayerRectangles getFriendlyRectangle(){
         return friendlyRectangle;
     }
+
+    //TODO - Implement chat (low priority)
 }
