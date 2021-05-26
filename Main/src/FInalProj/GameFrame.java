@@ -12,13 +12,13 @@ public class GameFrame {
     public GameCanvas gameCanvas;
     public Timer timer;
     public JPanel framePanel;
-    public void setUpGUI(int width, int height, ObjectOutputStream oOut, ObjectInputStream oIn){
+    public void setUpGUI(int width, int height, ObjectOutputStream oOut, ObjectInputStream oIn, String playerType){
         frame = new JFrame();
         framePanel = (JPanel) frame.getContentPane();
 
         frame.setSize(width,height);
 
-        gameCanvas = new GameCanvas(width,height,exportJPanel(), oOut,oIn);
+        gameCanvas = new GameCanvas(width,height,exportJPanel(), oOut,oIn,playerType);
         framePanel.add(gameCanvas);
 
 

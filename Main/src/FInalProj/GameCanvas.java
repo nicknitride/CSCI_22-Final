@@ -14,9 +14,9 @@ public class GameCanvas extends JComponent {
     ActionMap actionMap;
     PlayerRectangles rectangle;
 
-    public GameCanvas(int w, int h, JPanel panel, ObjectOutputStream oOut, ObjectInputStream oIn){//The constructor then sets the enemy rectangle to a class variable
+    public GameCanvas(int w, int h, JPanel panel, ObjectOutputStream oOut, ObjectInputStream oIn, String playerType){//The constructor then sets the enemy rectangle to a class variable
         setPreferredSize(new Dimension(w,h));
-        playerInstance = new Player(w, h, oOut, oIn);
+        playerInstance = new Player(w, h, oOut, oIn,playerType);
         interimJPanel = panel;
         inputMap = interimJPanel.getInputMap();//Passes the InputMap taken from GameFrame to the Playerinstance
         actionMap = interimJPanel.getActionMap();

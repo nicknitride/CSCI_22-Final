@@ -6,6 +6,7 @@ import java.net.Socket;
 
 public class GameServer {
     int connectedClientCount;
+    final String playerType = "server";
     ServerSocket serverSocket;
     Socket clientSocket;
     ObjectInputStream objectIn;
@@ -48,7 +49,7 @@ public class GameServer {
         }
         @Override
         public void run() {
-            serverFrame.setUpGUI(640,480,objectOut,objectIn);
+            serverFrame.setUpGUI(640,480,objectOut,objectIn, playerType);
             serverFrame.setUpTimer();
         }
     }

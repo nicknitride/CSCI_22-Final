@@ -7,6 +7,7 @@ import java.net.Socket;
     Attempt to integrate the chat code and position code into a singular thread
  */
 public class GameStarter{
+    final String playerType = "client";
     Socket clientSocket;
     ObjectInputStream objectIn;
     ObjectOutputStream objectOut;
@@ -36,7 +37,7 @@ public class GameStarter{
         }
         @Override
         public void run() {
-            clientFrame.setUpGUI(640,480,objectOut,objectIn);
+            clientFrame.setUpGUI(640,480,objectOut,objectIn,playerType);
             clientFrame.setUpTimer();
         }
     }
