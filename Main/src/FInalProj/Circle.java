@@ -36,17 +36,14 @@ public class Circle{
            Ellipse2D.Double circle1 = new Ellipse2D.Double(xPosition, yPosition, size, size);
             g2d.setColor(color);
             g2d.fill(circle1);
+            String coordinates = "coordinates: ("+getX()+", "+getY()+")";
+            g2d.drawString(coordinates,getX(),getY()+5);
     }
 
     public int getY(){
         return yPosition;
     }
-
     public int getX(){
         return xPosition;
-    }
-
-    public void move(int moveY) {
-        yPosition-=moveY;
     }
 }

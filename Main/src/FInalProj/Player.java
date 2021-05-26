@@ -48,15 +48,13 @@ public class Player{
                 if(playerX+defaultRectangleWidth>=rightBorder){
                     movePlayer(-5);
                 }
-            }//TODO implement an actionMap to create projectiles - assign the actionMap to a key using inputMap later on (High Priority)
+            }
         };
         AbstractAction fireProjectile = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                projectile = new Circle(playerX,projectileY,30,new Color(61,108,14));;
-               projectileIsActive=true;
+                projectileIsActive=true;
                 System.out.println("Projectile movement status:" +projectileIsActive);
-
             }
         };
         actionMap.put("left",moveLeft);
@@ -66,10 +64,10 @@ public class Player{
     public void initializeInputMap(InputMap inputMap){
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0,false),"left");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,false),"right");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE,0,true),"space");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE,0,false),"space");
     }
     public void initPlayerRectangle(Graphics2D g2d){
-        friendlyRectangle = new PlayerRectangles(playerX,playerY,defaultRectangleWidth,defaultRectangleHeight,"You");
+        friendlyRectangle = new PlayerRectangles(playerX,playerY,defaultRectangleWidth,defaultRectangleHeight,getPlayerType());
         try{
             oOut.writeObject(friendlyRectangle);
         } catch (IOException exception) {
@@ -80,6 +78,7 @@ public class Player{
         } finally {
             friendlyRectangle.draw(g2d);
             if (projectileIsActive){
+                projectile = new Circle(playerX,projectileY,30,new Color(61,108,14));;
                 projectile.draw(g2d);
                 moveProjectile();
             }
@@ -91,7 +90,7 @@ public class Player{
             if (receivedObject instanceof PlayerRectangles) {
                 PlayerRectangles instance = (PlayerRectangles) receivedObject;
                 enemyX = instance.getX();
-                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,getPlayerType());
+                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,"");
                 instance.draw(g2d);
             }
         } catch(Exception ex){
@@ -109,7 +108,12 @@ public class Player{
     }
 
     public void moveProjectile(){
-        projectileY-=1;
+        projectileY-=5;
+    }
+
+    public void projectileBorderCollision(){//TODO Border Collision
+        //640*480
+
     }
 
     //TODO - Implement chat (low priority)
