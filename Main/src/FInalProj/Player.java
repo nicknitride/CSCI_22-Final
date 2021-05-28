@@ -90,7 +90,7 @@ public class Player{
                 projectileBorderCollision();
             }
             else if(!projectileIsActive){
-                projectileY=300;
+                projectileY=370;
                 projectile.draw(g2d);
             }
         }
@@ -126,7 +126,7 @@ public class Player{
     }
 
     public void renderEnemyProjectile(Graphics2D g2d, PlayerRectangles instance){
-        enemyProjectile = new Circle(instance.getX(), 480-instance.getProjectilePos(), 30, new Color(16, 99, 113));
+        enemyProjectile = new Circle(instance.getX(), 420-instance.getProjectilePos(), 30, new Color(16, 99, 113));
         enemyProjectile.draw(g2d);
     }
 }
