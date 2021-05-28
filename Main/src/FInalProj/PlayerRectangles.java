@@ -12,14 +12,15 @@ Generates player rectangles
 To-do: Implement a JPEG overlay on top of the rectangles for player icons
  */
 public class PlayerRectangles implements Serializable {
-    int x,y,width,height, rightBorder, bottomBorder;
+    int x,y,width,height, projectilePos;
     String label;
-    PlayerRectangles(int x, int y, int width, int height,String label){
+    PlayerRectangles(int x, int y, int width, int height,String label,int projectilePos){
         this.x=x;
         this.y=y;
         this.width=width;
         this.height=height;
         this.label = label;
+        this.projectilePos = projectilePos;
     }
 
     public void draw(Graphics2D g2d){
@@ -43,6 +44,10 @@ public class PlayerRectangles implements Serializable {
 
     public int getHeight() {
         return height;
+    }
+
+    public int getProjectilePos(){
+        return projectilePos;
     }
 
     //TODO implement collision detection

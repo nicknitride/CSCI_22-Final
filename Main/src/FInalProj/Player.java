@@ -5,25 +5,31 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import javax.swing.*;
 
 //This class contains the code that manages the player's appearance and functionality
 public class Player{
-    PlayerRectangles friendlyRectangle;
-    String playerType;
-    int defaultRectangleWidth = 20, defaultRectangleHeight = 50;
-    int playerX, playerY;
-    int projectileY = 500;
-    boolean projectileIsActive;
-    int enemyX,enemyY;//Enemy Y will be used to detect collision between enemy fire and the squares
-    int rightBorder, bottomBorder;
-    Circle projectile;
+    //Server Related
     ObjectOutputStream oOut;
     ObjectInputStream oIn;
+    String playerType;
+
+    //Friendly Rectangle
+    PlayerRectangles friendlyRectangle;
+    int defaultRectangleWidth = 20, defaultRectangleHeight = 50;
+    int playerX, playerY;
+    int projectileY;
+
+    //Enemy and Enemy Projectiles
+    int enemyX;
+    int rightBorder, bottomBorder;
+    Circle projectile, enemyProjectile;
+    boolean projectileIsActive;
+
+
     public Player(int width, int height, ObjectOutputStream oOut, ObjectInputStream oIn, String playerType){
         playerX = 320;
-        playerY = 390;
+        playerY = 400;
         rightBorder = width;
         bottomBorder = height;
         this.oOut = oOut;
@@ -67,7 +73,7 @@ public class Player{
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE,0,false),"space");
     }
     public void initPlayerRectangle(Graphics2D g2d){
-        friendlyRectangle = new PlayerRectangles(playerX,playerY,defaultRectangleWidth,defaultRectangleHeight,getPlayerType());
+        friendlyRectangle = new PlayerRectangles(playerX,playerY,defaultRectangleWidth,defaultRectangleHeight,getPlayerType(),projectileY);
         try{
             oOut.writeObject(friendlyRectangle);
         } catch (IOException exception) {
@@ -77,7 +83,7 @@ public class Player{
             }
         } finally {
             friendlyRectangle.draw(g2d);
-            projectile = new Circle(playerX,projectileY,30,new Color(61,108,14));
+            projectile = new Circle(playerX,projectileY,30,new Color(16, 99, 113));
             if (projectileIsActive){
                 projectile.draw(g2d);
                 moveProjectile();
@@ -95,17 +101,13 @@ public class Player{
             if (receivedObject instanceof PlayerRectangles) {
                 PlayerRectangles instance = (PlayerRectangles) receivedObject;
                 enemyX = instance.getX();
-                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,"");
+                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,"",instance.getProjectilePos());
+                renderEnemyProjectile(g2d,instance);
                 instance.draw(g2d);
             }
         } catch(Exception ex){
             ex.printStackTrace();
         }
-
-
-    }
-    public PlayerRectangles getFriendlyRectangle(){
-        return friendlyRectangle;
     }
 
     public String getPlayerType(){
@@ -117,10 +119,14 @@ public class Player{
     }
 
     public void projectileBorderCollision(){//TODO Border Collision
-        //640*480
         if(projectileY<=0) {
             projectileIsActive = false;
+            System.out.println("Projectile has collided with the border");
         }
-        System.out.println(projectileIsActive);
+    }
+
+    public void renderEnemyProjectile(Graphics2D g2d, PlayerRectangles instance){
+        enemyProjectile = new Circle(instance.getX(), 480-instance.getProjectilePos(), 30, new Color(16, 99, 113));
+        enemyProjectile.draw(g2d);
     }
 }

@@ -31,7 +31,6 @@ public class GameCanvas extends JComponent {
         g2d.addRenderingHints(rh);
 
         playerInstance.initPlayerRectangle(g2d);
-        rectangle = playerInstance.getFriendlyRectangle();
         playerInstance.initEnemyRectangle(g2d);
     }
 
