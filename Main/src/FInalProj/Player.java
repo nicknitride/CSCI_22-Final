@@ -77,10 +77,15 @@ public class Player{
             }
         } finally {
             friendlyRectangle.draw(g2d);
+            projectile = new Circle(playerX,projectileY,30,new Color(61,108,14));
             if (projectileIsActive){
-                projectile = new Circle(playerX,projectileY,30,new Color(61,108,14));;
                 projectile.draw(g2d);
                 moveProjectile();
+                projectileBorderCollision();
+            }
+            else if(!projectileIsActive){
+                projectileY=300;
+                projectile.draw(g2d);
             }
         }
     }
@@ -113,8 +118,9 @@ public class Player{
 
     public void projectileBorderCollision(){//TODO Border Collision
         //640*480
-
+        if(projectileY<=0) {
+            projectileIsActive = false;
+        }
+        System.out.println(projectileIsActive);
     }
-
-    //TODO - Implement chat (low priority)
 }
