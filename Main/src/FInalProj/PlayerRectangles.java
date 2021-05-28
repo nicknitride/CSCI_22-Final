@@ -49,6 +49,4 @@ public class PlayerRectangles implements Serializable {
     public int getProjectilePos(){
         return projectilePos;
     }
-
-    //TODO implement collision detection
 }
