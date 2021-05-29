@@ -4,59 +4,10 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class GameServer {
-    int connectedClientCount;
-    final String playerType = "server";
-    ServerSocket serverSocket;
-    Socket clientSocket;
-    ObjectInputStream objectIn;
-    ObjectOutputStream objectOut;
-    GameFrame serverFrame;
-    public void connectionAttempt(){
-        while(connectedClientCount<1) {
-            try {
-                serverSocket = new ServerSocket(52300);
-                System.out.println("Server open and awaiting connection");
-                clientSocket = serverSocket.accept();
-                OutputStream outputStream = clientSocket.getOutputStream();
-                InputStream inputStream = clientSocket.getInputStream();
-                objectOut = new ObjectOutputStream(outputStream);
-                objectIn = new ObjectInputStream(inputStream);
-            } catch (IOException e) {
-                System.out.println("Server failed the connection attempt");
-                e.printStackTrace();
-            }
-            connectedClientCount+=1;
-        }
-        System.out.println("Server at capacity");
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void initGUIThread(){
-        guiStarter gui = new guiStarter();
-        Thread guiThread = new Thread(gui);
-        guiThread.start();
-    }
-
-    public class guiStarter implements Runnable{
-        guiStarter(){
-            serverFrame = new GameFrame();
-        }
-        @Override
-        public void run() {
-            serverFrame.setUpGUI(640,480,objectOut,objectIn, playerType);
-            serverFrame.setUpTimer();
-        }
-    }
-
+public class GameServer extends Network{
     public static void main(String[] args){
-        GameServer server = new GameServer();
-        server.connectionAttempt();
-        server.initGUIThread();
+        setPlayerType("server");//Player Type is specified to control if-else statements relating to the player class initiated within the GUI Thread
+        startServer(52300);
+        initGUIThread();
     }
 }
