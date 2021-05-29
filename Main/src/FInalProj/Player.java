@@ -16,6 +16,9 @@ public class Player {
     double rawHitCount;
     double hostileHitCount;
     Color projectileColor;
+    Boolean win = false, loss = false;
+    int enemyLife;
+    int playerLife;
 
 
     //Friendly Rectangle
@@ -23,8 +26,9 @@ public class Player {
     int defaultRectangleWidth = 20, defaultRectangleHeight = 50;
     int playerX, playerY;
     int projectileY;
-    Boolean serverLoss,serverWin;
+
     //Enemy and Enemy Projectiles
+    PlayerRectangles instance;
     int enemyX;
     int rightBorder, bottomBorder;
     Circle projectile, enemyProjectile;
@@ -69,27 +73,31 @@ public class Player {
                 //System.out.println("Projectile movement status:" + projectileIsActive);
             }
         };
+        AbstractAction quitGame = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(win || loss){
+                    System.exit(0);
+                }
+            }
+        };
         actionMap.put("left", moveLeft);
         actionMap.put("right", moveRight);
         actionMap.put("space", fireProjectile);
+        actionMap.put("enter",quitGame);
     }
 
     public void initializeInputMap(InputMap inputMap) {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), "space");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0,false),"enter");
     }
 
-    public void initPlayerRectangle(Graphics2D g2d) {
+    public void initPlayerRectangle(Graphics2D g2d) throws IOException, ClassNotFoundException {
         friendlyRectangle = new PlayerRectangles(playerX, playerY, defaultRectangleWidth, defaultRectangleHeight, getPlayerType(), projectileY,projectileColor);
-        try {
+        if(!win && !loss) {
             oOut.writeObject(friendlyRectangle);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            if (friendlyRectangle == null) {
-                System.out.println("Friendly rectangle was null");
-            }
-        } finally {
             friendlyRectangle.draw(g2d);
             projectile = new Circle(playerX, projectileY, 30, projectileColor);
             if (projectileIsActive) {
@@ -103,25 +111,31 @@ public class Player {
                 projectile.draw(g2d);
             }
         }
+        else if (win){
+            oOut.writeObject(friendlyRectangle);
+            friendlyRectangle.draw(g2d);
+            g2d.drawString("YOU'VE WON!",320,240);
+            g2d.drawString("Press ENTER to Quit",320,255);
+        }
+        else if (loss){
+            oOut.writeObject(friendlyRectangle);
+            friendlyRectangle.draw(g2d);
+            g2d.drawString("YOU'VE LOST :(",320,240);
+            g2d.drawString("Press ENTER to Quit",320,255);
+        }
     }
-    public void initEnemyRectangle(Graphics2D g2d){
-        try {
-            Object receivedObject = oIn.readObject();
-            if (receivedObject instanceof PlayerRectangles) {
-                PlayerRectangles instance = (PlayerRectangles) receivedObject;
-                enemyX = instance.getX();
-                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,"",instance.getProjectilePos(),instance.getProjectileColor());
-                renderEnemyProjectile(g2d,instance);
-                if(playerType.contentEquals("server")) {
-                    checkFriendlyCollisionWithHostile(instance);
-                    checkHostileCollisionWithFriendly();
-                    checkHealth();
-                    checkEnemyHealth();
-                }
-                instance.draw(g2d);
-            }
-        } catch(Exception ex){
-            ex.printStackTrace();
+    public void initEnemyRectangle(Graphics2D g2d) throws IOException, ClassNotFoundException {
+        Object receivedObject = oIn.readObject();
+        if((!win && !loss) && receivedObject instanceof PlayerRectangles) {
+            instance = (PlayerRectangles) receivedObject;
+            enemyX = instance.getX();
+            instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight, "", instance.getProjectilePos(), instance.getProjectileColor());
+            renderEnemyProjectile(g2d, instance);
+            checkFriendlyCollisionWithHostile(instance);
+            checkHostileCollisionWithFriendly();
+            checkEnemyHealth();
+            checkHealth();
+            instance.draw(g2d);
         }
     }
 
@@ -136,7 +150,6 @@ public class Player {
     public void projectileBorderCollision(){
         if(projectileY<=0) {
             projectileIsActive = false;
-            System.out.println("Projectile has collided with the border");
         }
     }
 
@@ -146,28 +159,26 @@ public class Player {
     }
     public void checkHostileCollisionWithFriendly(){
         if ((enemyX==playerX+5 || enemyX==playerX-5 || enemyX==playerX) && !((enemyProjectile.getY())<=playerY-defaultRectangleHeight)) {
-            rawHitCount +=0.09;//Because each hit counts as 15 when using the timer at 20ms so 1/15 = 0.67
+            rawHitCount +=0.09;
         }
     }
-    public void checkFriendlyCollisionWithHostile(PlayerRectangles instance){//TODO write a method that checks if Player projectile has damaged hostile rectangle
+    public void checkFriendlyCollisionWithHostile(PlayerRectangles instance){
         if ((playerX==enemyX+5 || playerX==enemyX-5 || playerX==enemyX) && !((projectileY)>=instance.getY()+defaultRectangleHeight)) {
-            hostileHitCount +=0.09;//Because each hit counts as 15 when using the timer at 20ms so 1/15 =
+            hostileHitCount +=0.1;
         }
     }
     public void checkHealth() {
         int friendlyHealth = 3;
-        int life = friendlyHealth - ((int) rawHitCount);
-        if (life <= 0) {
-            serverLoss=true;
-            System.out.println("Server has lost");
+        playerLife = friendlyHealth - ((int) rawHitCount);
+        if (playerLife <= 0) {
+            loss=true;
         }
     }
     public void checkEnemyHealth(){
         int enemyHealth = 3;
-        int life = enemyHealth - ((int)hostileHitCount);
-        if(life<=0){
-            serverWin=true;
-            System.out.println("Server has won");
+        enemyLife = enemyHealth - ((int)hostileHitCount);
+        if(enemyLife<=0){
+            win=true;
         }
     }
 }
