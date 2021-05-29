@@ -5,12 +5,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
-/*
-Generates player rectangles
- */
-/*
-To-do: Implement a JPEG overlay on top of the rectangles for player icons
- */
+
 public class PlayerRectangles implements Serializable {
     int x,y,width,height, projectilePos;
     String label;

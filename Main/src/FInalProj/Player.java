@@ -15,6 +15,7 @@ public class Player {
     String playerType;
     double rawHitCount;
     int hostileHitCount;
+    //Color projectileColor = new Color(255,255,255);
 
     //Friendly Rectangle
     PlayerRectangles friendlyRectangle;
@@ -64,7 +65,7 @@ public class Player {
             @Override
             public void actionPerformed(ActionEvent e) {
                 projectileIsActive = true;
-                System.out.println("Projectile movement status:" + projectileIsActive);
+                //System.out.println("Projectile movement status:" + projectileIsActive);
             }
         };
         actionMap.put("left", moveLeft);
@@ -95,7 +96,7 @@ public class Player {
                 projectile.draw(g2d);
                 moveProjectile();
                 projectileBorderCollision();
-            } else if (!projectileIsActive) {
+            } else {
                 projectileY = 370;
                 projectile.draw(g2d);
             }
@@ -138,8 +139,11 @@ public class Player {
     }
     public void checkHostileCollisionWithFriendly(PlayerRectangles instance){
         if ((enemyX==playerX+5 || enemyX==playerX-5 || enemyX==playerX) && !((enemyProjectile.getY())<=playerY-defaultRectangleHeight)) {//TODO figure out the boolean expression for collision
-            rawHitCount +=0.067;//Because each hit counts as 15 when using int 0.06 = 1/15
+            rawHitCount +=0.067;//Because each hit counts as 15 when using the timer at 20ms so 1/15 = 0.67
         }
+    }
+    public void checkFriendlyCollisionWithHostile(){//TODO write a method that checks if Player projectile has damaged hostile rectangle
+
     }
     public void checkHealth() {
         int interpretedHitCount = (int) rawHitCount;
@@ -147,5 +151,4 @@ public class Player {
             System.out.println("Friendly has no hit points remaining");//This works TODO a condition that gets called when health reaches 0
         }
     }
-    //TODO write a method that checks if Player projectile has damaged hostile rectangle
 }
