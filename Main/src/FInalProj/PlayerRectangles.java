@@ -1,7 +1,6 @@
 package FInalProj;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
@@ -33,14 +32,6 @@ public class PlayerRectangles implements Serializable {
 
     public int getY() {
         return y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public int getProjectilePos(){

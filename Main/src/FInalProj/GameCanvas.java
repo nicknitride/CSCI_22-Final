@@ -12,27 +12,22 @@ public class GameCanvas extends JComponent {
     JPanel interimJPanel;
     InputMap inputMap;
     ActionMap actionMap;
-    PlayerRectangles rectangle;
 
     public GameCanvas(int w, int h, JPanel panel, ObjectOutputStream oOut, ObjectInputStream oIn, String playerType){//The constructor then sets the enemy rectangle to a class variable
         setPreferredSize(new Dimension(w,h));
         playerInstance = new Player(w, h, oOut, oIn,playerType);
         interimJPanel = panel;
-        inputMap = interimJPanel.getInputMap();//Passes the InputMap taken from GameFrame to the Playerinstance
+        inputMap = interimJPanel.getInputMap();//Passes the InputMap taken from GameFrame to the Player Instance
         actionMap = interimJPanel.getActionMap();
         playerInstance.initializeInputMap(inputMap);
         playerInstance.initializeActionMap(actionMap);
-
     }
     @Override
     public void paintComponent(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.addRenderingHints(rh);
-
         playerInstance.initPlayerRectangle(g2d);
         playerInstance.initEnemyRectangle(g2d);
     }
-
-
 }

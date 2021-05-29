@@ -14,15 +14,16 @@ public class Player {
     ObjectInputStream oIn;
     String playerType;
     double rawHitCount;
-    int hostileHitCount;
-    Color projectileColor /*= new Color(255,255,255)*/;
+    double hostileHitCount;
+    Color projectileColor;
+
 
     //Friendly Rectangle
     PlayerRectangles friendlyRectangle;
     int defaultRectangleWidth = 20, defaultRectangleHeight = 50;
     int playerX, playerY;
     int projectileY;
-
+    Boolean serverLoss,serverWin;
     //Enemy and Enemy Projectiles
     int enemyX;
     int rightBorder, bottomBorder;
@@ -90,8 +91,7 @@ public class Player {
             }
         } finally {
             friendlyRectangle.draw(g2d);
-            checkHealth();
-            projectile = new Circle(playerX, projectileY, 30, projectileColor);//TODO white projectile if inert and when in motion enable color
+            projectile = new Circle(playerX, projectileY, 30, projectileColor);
             if (projectileIsActive) {
                 projectileColor = new Color(255, 117, 117);
                 projectile.draw(g2d);
@@ -110,9 +110,14 @@ public class Player {
             if (receivedObject instanceof PlayerRectangles) {
                 PlayerRectangles instance = (PlayerRectangles) receivedObject;
                 enemyX = instance.getX();
-                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,"",instance.getProjectilePos(),instance.projectileColor);
+                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,"",instance.getProjectilePos(),instance.getProjectileColor());
                 renderEnemyProjectile(g2d,instance);
-                checkHostileCollisionWithFriendly(instance);
+                if(playerType.contentEquals("server")) {
+                    checkFriendlyCollisionWithHostile(instance);
+                    checkHostileCollisionWithFriendly();
+                    checkHealth();
+                    checkEnemyHealth();
+                }
                 instance.draw(g2d);
             }
         } catch(Exception ex){
@@ -139,18 +144,30 @@ public class Player {
         enemyProjectile = new Circle(instance.getX(), 420-instance.getProjectilePos(), 30, instance.projectileColor);
         enemyProjectile.draw(g2d);
     }
-    public void checkHostileCollisionWithFriendly(PlayerRectangles instance){
-        if ((enemyX==playerX+5 || enemyX==playerX-5 || enemyX==playerX) && !((enemyProjectile.getY())<=playerY-defaultRectangleHeight)) {//TODO figure out the boolean expression for collision
-            rawHitCount +=0.067;//Because each hit counts as 15 when using the timer at 20ms so 1/15 = 0.67
+    public void checkHostileCollisionWithFriendly(){
+        if ((enemyX==playerX+5 || enemyX==playerX-5 || enemyX==playerX) && !((enemyProjectile.getY())<=playerY-defaultRectangleHeight)) {
+            rawHitCount +=0.09;//Because each hit counts as 15 when using the timer at 20ms so 1/15 = 0.67
         }
     }
-    public void checkFriendlyCollisionWithHostile(){//TODO write a method that checks if Player projectile has damaged hostile rectangle
-
+    public void checkFriendlyCollisionWithHostile(PlayerRectangles instance){//TODO write a method that checks if Player projectile has damaged hostile rectangle
+        if ((playerX==enemyX+5 || playerX==enemyX-5 || playerX==enemyX) && !((projectileY)>=instance.getY()+defaultRectangleHeight)) {
+            hostileHitCount +=0.09;//Because each hit counts as 15 when using the timer at 20ms so 1/15 =
+        }
     }
     public void checkHealth() {
-        int interpretedHitCount = (int) rawHitCount;
-        if (interpretedHitCount >= 3) {
-            System.out.println("Friendly has no hit points remaining");//This works TODO a condition that gets called when health reaches 0
+        int friendlyHealth = 3;
+        int life = friendlyHealth - ((int) rawHitCount);
+        if (life <= 0) {
+            serverLoss=true;
+            System.out.println("Server has lost");
+        }
+    }
+    public void checkEnemyHealth(){
+        int enemyHealth = 3;
+        int life = enemyHealth - ((int)hostileHitCount);
+        if(life<=0){
+            serverWin=true;
+            System.out.println("Server has won");
         }
     }
 }
