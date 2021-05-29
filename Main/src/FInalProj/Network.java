@@ -3,6 +3,8 @@ package FInalProj;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLOutput;
+import java.util.Scanner;
 
 public class Network {
     static int connectedClientCount;
@@ -13,7 +15,15 @@ public class Network {
     static ObjectOutputStream objectOut;
     static GameFrame instanceFrame;
     static Socket clientSocket;
-
+    static Scanner scan = new Scanner(System.in);
+    public static int setPort(){
+        System.out.println("Enter a port");
+        return scan.nextInt();
+    }
+    public static String  setHost(){
+        System.out.println("Enter a host IP/Name");
+        return scan.next();
+    }
 
     public static void setPlayerType(String string){
         playerType = string;
@@ -44,7 +54,7 @@ public class Network {
 
     public static void startClient(String host, int port){
         try {
-            clientSocket = new Socket("localhost", 52300);
+            clientSocket = new Socket(host, port);
             OutputStream outputStream = clientSocket.getOutputStream();
             InputStream inputStream = clientSocket.getInputStream();
             objectOut = new ObjectOutputStream(outputStream);

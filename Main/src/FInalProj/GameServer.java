@@ -6,8 +6,9 @@ import java.net.Socket;
 
 public class GameServer extends Network{
     public static void main(String[] args){
+        int port = setPort();
         setPlayerType("server");//Player Type is specified to control if-else statements relating to the player class initiated within the GUI Thread
-        startServer(52300);
+        startServer(port);
         initGUIThread();
     }
 }

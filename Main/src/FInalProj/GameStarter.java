@@ -9,7 +9,9 @@ import java.net.Socket;
 public class GameStarter extends Network{
     public static void main(String[] args) {
         setPlayerType("client");
-        startClient("localhost",52300);
+        int port = setPort();
+        String host = setHost();
+        startClient(host,port);
         initGUIThread();
     }
 }
