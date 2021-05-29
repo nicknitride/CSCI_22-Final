@@ -15,7 +15,7 @@ public class Player {
     String playerType;
     double rawHitCount;
     int hostileHitCount;
-    //Color projectileColor = new Color(255,255,255);
+    Color projectileColor = new Color(255,255,255);
 
     //Friendly Rectangle
     PlayerRectangles friendlyRectangle;
@@ -91,8 +91,9 @@ public class Player {
         } finally {
             friendlyRectangle.draw(g2d);
             checkHealth();
-            projectile = new Circle(playerX, projectileY, 30, new Color(16, 99, 113));//TODO white projectile if inert and when in motion enable color
+            projectile = new Circle(playerX, projectileY, 30, projectileColor);//TODO white projectile if inert and when in motion enable color
             if (projectileIsActive) {
+                projectileColor = new Color(255, 117, 117);
                 projectile.draw(g2d);
                 moveProjectile();
                 projectileBorderCollision();
