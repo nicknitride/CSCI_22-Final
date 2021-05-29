@@ -30,7 +30,7 @@ public class Network {
     }
     public static void startServer(int port){
         while(connectedClientCount<1) {
-            try {
+            try {//TODO set fallback host IP and port number
                 serverSocket = new ServerSocket(port);
                 System.out.println("Server open and awaiting connection");
                 openServerSocket = serverSocket.accept();
