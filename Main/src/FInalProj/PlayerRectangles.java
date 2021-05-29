@@ -8,14 +8,16 @@ import java.io.Serializable;
 
 public class PlayerRectangles implements Serializable {
     int x,y,width,height, projectilePos;
+    Color projectileColor;
     String label;
-    PlayerRectangles(int x, int y, int width, int height,String label,int projectilePos){
+    PlayerRectangles(int x, int y, int width, int height,String label,int projectilePos,Color color){
         this.x=x;
         this.y=y;
         this.width=width;
         this.height=height;
         this.label = label;
         this.projectilePos = projectilePos;
+        projectileColor = color;
     }
 
     public void draw(Graphics2D g2d){
@@ -43,5 +45,9 @@ public class PlayerRectangles implements Serializable {
 
     public int getProjectilePos(){
         return projectilePos;
+    }
+
+    public Color getProjectileColor() {
+        return projectileColor;
     }
 }

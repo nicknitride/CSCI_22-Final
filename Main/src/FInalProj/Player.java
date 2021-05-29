@@ -15,7 +15,7 @@ public class Player {
     String playerType;
     double rawHitCount;
     int hostileHitCount;
-    Color projectileColor = new Color(255,255,255);
+    Color projectileColor /*= new Color(255,255,255)*/;
 
     //Friendly Rectangle
     PlayerRectangles friendlyRectangle;
@@ -80,7 +80,7 @@ public class Player {
     }
 
     public void initPlayerRectangle(Graphics2D g2d) {
-        friendlyRectangle = new PlayerRectangles(playerX, playerY, defaultRectangleWidth, defaultRectangleHeight, getPlayerType(), projectileY);
+        friendlyRectangle = new PlayerRectangles(playerX, playerY, defaultRectangleWidth, defaultRectangleHeight, getPlayerType(), projectileY,projectileColor);
         try {
             oOut.writeObject(friendlyRectangle);
         } catch (IOException exception) {
@@ -98,6 +98,7 @@ public class Player {
                 moveProjectile();
                 projectileBorderCollision();
             } else {
+                projectileColor = new Color(238, 238, 238);
                 projectileY = 370;
                 projectile.draw(g2d);
             }
@@ -109,7 +110,7 @@ public class Player {
             if (receivedObject instanceof PlayerRectangles) {
                 PlayerRectangles instance = (PlayerRectangles) receivedObject;
                 enemyX = instance.getX();
-                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,"",instance.getProjectilePos());
+                instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight,"",instance.getProjectilePos(),instance.projectileColor);
                 renderEnemyProjectile(g2d,instance);
                 checkHostileCollisionWithFriendly(instance);
                 instance.draw(g2d);
@@ -135,7 +136,7 @@ public class Player {
     }
 
     public void renderEnemyProjectile(Graphics2D g2d, PlayerRectangles instance){
-        enemyProjectile = new Circle(instance.getX(), 420-instance.getProjectilePos(), 30, new Color(16, 99, 113));
+        enemyProjectile = new Circle(instance.getX(), 420-instance.getProjectilePos(), 30, instance.projectileColor);
         enemyProjectile.draw(g2d);
     }
     public void checkHostileCollisionWithFriendly(PlayerRectangles instance){
