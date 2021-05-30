@@ -129,12 +129,12 @@ public class Player {
         if((!win && !loss) && receivedObject instanceof PlayerRectangles) {
             instance = (PlayerRectangles) receivedObject;
             enemyX = instance.getX();
-            instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight, "", instance.getProjectilePos(), instance.getProjectileColor());
+            instance = new PlayerRectangles(enemyX, 0, defaultRectangleWidth, defaultRectangleHeight, ""+enemyLife, instance.getProjectilePos(), instance.getProjectileColor());
             renderEnemyProjectile(g2d, instance);
             checkFriendlyCollisionWithHostile(instance);
             checkHostileCollisionWithFriendly();
             checkEnemyHealth();
-            checkHealth();
+            checkHealth(g2d);
             instance.draw(g2d);
         }
     }
@@ -159,21 +159,25 @@ public class Player {
     }
     public void checkHostileCollisionWithFriendly(){
         if ((enemyX==playerX+5 || enemyX==playerX-5 || enemyX==playerX) && !((enemyProjectile.getY())<=playerY-defaultRectangleHeight)) {
-            rawHitCount +=0.09;
+            rawHitCount +=0.09;//Hostile hit count has to be delayed in order for the hit to register on the client side
+            //When on the final strike changing to a higher value results in a JFrame crash
         }
     }
     public void checkFriendlyCollisionWithHostile(PlayerRectangles instance){
         if ((playerX==enemyX+5 || playerX==enemyX-5 || playerX==enemyX) && !((projectileY)>=instance.getY()+defaultRectangleHeight)) {
-            hostileHitCount +=0.1;
+            hostileHitCount +=0.1;//Needs to be 0.01 faster than HostileCollisionWithFriendly
         }
     }
-    public void checkHealth() {
+    public void checkHealth(Graphics2D g2d) {
         int friendlyHealth = 3;
         playerLife = friendlyHealth - ((int) rawHitCount);
         if (playerLife <= 0) {
             loss=true;
         }
+        String display = ""+playerLife;
+        g2d.drawString(display,playerX,playerY+10);
     }
+
     public void checkEnemyHealth(){
         int enemyHealth = 3;
         enemyLife = enemyHealth - ((int)hostileHitCount);
