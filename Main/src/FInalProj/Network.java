@@ -15,6 +15,16 @@ public class Network {
     static GameFrame instanceFrame;
     static Socket clientSocket;
     static Scanner scan = new Scanner(System.in);
+
+    public static boolean defaultPortPrompt(){
+        System.out.println("Use the default port [Yes/No]");
+        String decision = scan.next();
+        if (decision.contains("y") || decision.contains("Y")){
+            return true;
+        }
+        else {return false;}
+    }
+
     public static int setPort(){
         System.out.println("Enter a port");
         return scan.nextInt();

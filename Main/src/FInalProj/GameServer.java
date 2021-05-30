@@ -1,13 +1,14 @@
 package FInalProj;
-
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
-
 public class GameServer extends Network{
     public static void main(String[] args){
-        int port = setPort();
+        int port;
         setPlayerType("server");
+        if(defaultPortPrompt()){
+        port = 54000;
+        }
+        else{
+        port = setPort();
+        }
         startServer(port);
         initGUIThread();
     }
